@@ -2,3 +2,9 @@ altair
 pandas
 streamlit
 cv2
+glob
+PIL
+numpy
+os
+pandas
+numpy
