@@ -22,7 +22,7 @@ from streamlit_player import st_player
 
 
 # impoting pretrained and optimized model 
-model = load_model('vgg16Model.h5')
+# model = load_model('vgg16Model.h5')
 
 html_render_title = """
     <style="color:black;text-align:center;>KBS Assignment 2</style>
