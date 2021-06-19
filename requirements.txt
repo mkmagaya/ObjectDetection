@@ -1,9 +1,2 @@
-python>=21.1.2
 streamlit
 opencv-python
-glob
-PIL
-numpy
-os
-pandas
-numpy
