@@ -11,11 +11,6 @@ numpy
 pickle
 streamlit 
 tensorflow
-PIL Image
-tensorflow.keras.models 
-tensorflow.keras.preprocessing.image 
-tensorflow.keras.preprocessing 
-keras.applications.vgg16 
-tensorflow.keras.utils 
+PIL
 glob
 matplotlib
