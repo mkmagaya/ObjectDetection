@@ -1,8 +1,9 @@
+python>=21.1.2
 altair
 pandas
 streamlit
 opencv-python>=4.3.0.38
-glob>=3.5 
+glob
 PIL
 numpy
 os
