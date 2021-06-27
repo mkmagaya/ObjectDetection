@@ -1,124 +1,42 @@
-# Importing required libraries,
-import streamlit as st
-import cv2
-from PIL import Image
-import glob
-import numpy as np
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun 16 14:58:54 2021
+
+@author: Admin
+"""
+
+from flask import Flask, render_template, request, redirect
+from werkzeug.utils import secure_filename
+from objectdetection import ObjectDetection as ObjD
 import os
-import pandas as pd
-import numpy as np
-import pickle
-import streamlit as st
-import tensorflow as tf
-from PIL import Image
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, load_img, array_to_img
-from tensorflow.keras.preprocessing import image
-from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
-from tensorflow.keras.utils import plot_model
-import glob
-import matplotlib.pyplot as plt
-from streamlit_player import st_player
 
+UPLOAD_FOLDER = 'static/uploads/'
+app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'memcached'
+app.config['SECRET_KEY'] = 'super secret key'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+DO =  ObjD()
+@app.route('/', methods=["GET"])
+def index():
+    return render_template('home.html')
 
-# impoting pretrained and optimized model 
-# model = load_model('vgg16Model.h5')
+@app.route('/', methods=["POST"])
+def upload():
+    if request.method == 'POST':
+        file = request.files['videoInput']
+        filename = secure_filename(file.filename)
+        file_path =os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        DO.to_frames(file_path)
+        DO.detect_object()
+        return redirect('/')
+   
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    search_text = request.form.get("searchInput")
+    objects = DO.search_for(search_text)
+    return render_template('search.html', frames_list=objects, type_list=type(objects)==list, search_txt=search_text)
 
-html_render_title = """
-    <style="color:black;text-align:center;>KBS Assignment 2</style>
-    """ 
-html_temp = """
-	<div style ="background-color:yellow;padding:13px">
-	<h1 style ="color:black;text-align:left;">Keras & OpenCV Project</h1>
-	</div>
-	"""
-html_side_temp = """
-	<div style ="padding:13px">
-	<h1 style ="color:black;text-align:center;">Project Engineers</h1>
-    <h3 style ="color:black;text-align:center;">Magaya Makomborero r181571b</h3>
-    <h3 style ="color:black;text-align:center;">Mabhuka Oswell r181573f</h3>
-	</div>
-	"""    
-st.title("KBS Assignment 2")
-st.markdown(html_temp, unsafe_allow_html = True)
-# students = st.markdown(html_side_temp, unsafe_allow_html = True)
-st.sidebar.markdown(html_side_temp, unsafe_allow_html = True)
-
-
-def main():
-    videoLocation = st.file_uploader("Upload a Video:", type=["mp4"])
-    btn = st.button("Detect and Predict")
-    searchimage = st.text_input("Enter filename: ")
-    searchbtn = st.button("Search Files")
-    # st.sidebar.title("")
-    temporary_location = False
-    return (videoLocation)
-    if videoLocation is not None:
-        cap = cv2.VideoCapture(videoLocation)
-        k=cap.isOpened()
-        if k==False:
-            video_file = open(videoLocation)
-            video_bytes = video_file.read()
-            st.video(video_bytes)
-            if not os.path.exists('data'):
-                os.makedirs('data')
-            
-        count = 0                                                                                                                                                                                                                                                                                                                                                                              
-        while(True):
-            ret, frame = cap.read()
-            if not ret: 
-                break
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        
-            name = './kbsLogFiles/frames/' + 'raw' + str(count) + '.jpg'
-            print('Framing Vieo ....' + name)
-            cv2.imwrite(name, frame)
-            count += 1 
-    imagesLocation = "./kbsLogFiles/frames/*.jpg"
-    images = []
-    for filename in glob.glob(imagesLocation):
-        imageFrame = image.load_img(filename, color_mode='rgb', target_size=(224,224)) 
-        images.append(imageFrame)
-    # iterating over the frames
-    framedArr = []
-    for imageItem in images:
-    
-        plt.imshow(imageItem)
-        # transforming frames to array    
-        imageArray = image.img_to_array(imageItem)
-
-        # expanding dimensions
-        imageArray = np.expand_dims(imageArray, axis = 0)
-            
-        # preprocessing data    
-        imageArray = preprocess_input(imageArray)
-            
-        # detecting and predicting from frames
-        if btn:
-            # result = prediction()
-            features = model.predict(imageArray)
-            # Embed a youtube video
-            st_player(videoLocation)
-            # def record_data(frame):
-            cv2.imwrite("./filedata/", features)
-        elif searchbtn:
-            searchFor(searchimage)
-            output(searchResult)
-
-
-                   
-        #     # decoding predictions  
-        #     result = decode_predictions(features)
-        # framedArr.append(result)                    
-
-
-
-
-
-if __name__=='__main__':
-	main()
-
-
-
+if __name__ == '__main__':
+    app.run(host='localhost', debug=True, threaded=True)
 
