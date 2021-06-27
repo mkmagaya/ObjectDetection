@@ -160,6 +160,7 @@ imageArray
 
 """#Search function for video frames"""
 
+
 def searchFor(object):
     frame_list = detectObject()
     result_list = []
@@ -172,7 +173,7 @@ def searchFor(object):
             indexes.append(index)
     return result_list
 
-searchRes = searchFor('punching_bag')
+searchRes = search_for('punching_bag')
 
 """# displaying search result"""
 
