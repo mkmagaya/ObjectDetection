@@ -25,6 +25,7 @@ import os
 import cv2
 import json
 # from tensorflow.keras.preprocessing.image import img_to_array, load_img
+import keras
 from keras.applications.vgg16 import preprocess_input, decode_predictions
 from glob import glob
 from PIL import Image
