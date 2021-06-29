@@ -81,7 +81,7 @@ class ObjectDetection():
 
     # function to break videos into frames
     def to_frames(self, video_upload):
-        cap = cv2.VideoCapture(video_upload.name)
+        cap = cv2.VideoCapture(video_upload)
         if not os.path.exists('data'):
             os.makedirs('data')
         count = 0
