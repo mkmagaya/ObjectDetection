@@ -43,7 +43,7 @@ from tensorflow.keras.preprocessing import image
 import os
 import glob
 import cv2
-from tensorflow.keras.optimizers import Adam
+# from tensorflow.keras.optimizers import Adam
 from keras.preprocessing import image
 import requests
 from tensorflow.keras.models import load_model
@@ -51,30 +51,34 @@ from tensorflow.keras.preprocessing.image import img_to_array, load_img, array_t
 from tensorflow.keras.preprocessing import image
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 from tensorflow.keras.utils import plot_model
+from keras.optimizers import Adam
+
 
 # from tensorflow.keras.models import load_model
 # model = load_model('vgg16Model.h5')
 
-"""#creating object for VGG16 pre-trained **model**"""
+# """#creating object for VGG16 pre-trained **model**"""
 
 model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_shape=None)
 
-"""#plot model"""
+# """#plot model"""
 
 # plot_model(model, to_file='vgg_model.png')
 
-"""#model summary"""
+# """#model summary"""
 
 # model.summary()
 
-"""# Optimization"""
+# """# Optimization"""
 # from tensorflow.keras.optimizers import RMSprop
 
 # opt = RMSprop(lr=0.0001, decay=1e-6)
 opt = Adam(1e-4)
+# opt = Adam(lr=0.001)
+model.compile(optimizer=opt, loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
 # opt =(learning_rate=0.1)
 # opt = Adam(lr=0.001, decay=1e-6)
-model.compile(loss='mse',optimizer=opt, metrics=['accuracy'])
+# model.compile(loss='mse',optimizer=opt, metrics=['accuracy'])
 # model.compile(
 #     loss='sparse_categorical_crossentropy',
 #     optimizer=opt,
