@@ -24,9 +24,6 @@ import numpy as np
 import os
 import cv2
 import json
-# from tensorflow.keras.preprocessing.image import img_to_array, load_img
-import keras
-from keras.applications.vgg16 import preprocess_input, decode_predictions
 from glob import glob
 from PIL import Image
 import streamlit as st
@@ -37,7 +34,7 @@ import os
 import glob
 import cv2
 from tensorflow.keras.optimizers import Adam
-from keras.preprocessing import image
+from tensorflow.keras.optimizers import Adam
 import requests
 from tensorflow.keras.preprocessing.image import img_to_array, load_img, array_to_img
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
@@ -62,6 +59,7 @@ model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_sha
 
 # opt = RMSprop(lr=0.0001, decay=1e-6)
 # opt = Adam(1e-4)
+# opt =(learning_rate=0.1)
 opt = Adam(lr=0.001, decay=1e-6)
 # model.compile(loss='mse',optimizer=opt)
 model.compile(
