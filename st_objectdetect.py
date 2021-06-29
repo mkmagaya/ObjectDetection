@@ -81,20 +81,25 @@ class ObjectDetection():
 
     # function to break videos into frames
     def to_frames(self, video_upload):
-        cap = cv2.VideoCapture(video_upload)
+        with open(os.path.join("static/uploads", video_upload.name),"wb") as f:
+            f.write(video_upload.getbuffer())
+            video_file_path = "./static/uploads/"+str(video_upload.name)
+            st.write("saved uploaded file")
+        cap = cv2.VideoCapture(video_file_path)
+        st.write('[RUNNING>>] Framing Video File....' + video_upload.name)
         if not os.path.exists('data'):
             os.makedirs('data')
         count = 0
         while(True):
-          ret, frame = cap.read()
-          if not ret: 
+            ret, frame = cap.read()
+            if not ret: 
                 break
-          if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-          name = 'static/frames/' + 'raw' + str(count) + '.jpg'
-          print('Framing Video ....' + name)
-          cv2.imwrite(name, frame)
-          count += 1
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            name = 'static/frames/' + 'raw' + str(count) + '.jpg'
+            print('Framing Video ....' + name)
+            cv2.imwrite(name, frame)
+            count += 1
     
     # detecting objects from frames
     def detect_object(self):
