@@ -63,7 +63,6 @@ model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_sha
 
 """# Optimization"""
 
-Optimization 
 opt = Adam(1e-4)
 model.compile(loss='mse',optimizer=opt)
 
