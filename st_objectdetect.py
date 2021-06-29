@@ -36,7 +36,7 @@ from tensorflow.keras.utils import plot_model
 import os
 import glob
 import cv2
-from keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from keras.preprocessing import image
 import requests
 from tensorflow.keras.preprocessing.image import img_to_array, load_img, array_to_img
@@ -60,7 +60,7 @@ model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_sha
 """# Optimization"""
 # from tensorflow.keras.optimizers import RMSprop
 
-opt = RMSprop(lr=0.0001, decay=1e-6)
+# opt = RMSprop(lr=0.0001, decay=1e-6)
 # opt = Adam(1e-4)
 opt = Adam(lr=0.001, decay=1e-6)
 # model.compile(loss='mse',optimizer=opt)
