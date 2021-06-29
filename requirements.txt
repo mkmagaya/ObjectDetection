@@ -1,5 +1,4 @@
 streamlit==0.83.0
-opencv-python==4.5.2.54
 skia-python==87.2
 tensorflow==2.5.0
 pip==21.1.3
