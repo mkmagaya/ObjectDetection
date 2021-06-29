@@ -24,8 +24,7 @@ import numpy as np
 import os
 import cv2
 import json
-# from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, load_img
+# from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from keras.applications.vgg16 import preprocess_input, decode_predictions
 from glob import glob
 from PIL import Image
@@ -33,18 +32,14 @@ import streamlit as st
 import numpy as np
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 from tensorflow.keras.utils import plot_model
-from tensorflow.keras.preprocessing import image
 import os
 import glob
 import cv2
-from tensorflow.keras.optimizers import Adam
+from keras.optimizers import Adam
 from keras.preprocessing import image
 import requests
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array, load_img, array_to_img
-from tensorflow.keras.preprocessing import image
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
-from tensorflow.keras.utils import plot_model
 
 # from tensorflow.keras.models import load_model
 # model = load_model('vgg16Model.h5')
