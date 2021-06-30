@@ -81,28 +81,32 @@ class ObjectDetection():
 
     # function to break videos into frames
     def to_frames(self, video_upload):
+        if not os.path.exists('static'): 
+            os.makedirs('static')
+            if not os.path.exists('uploads'): 
+                os.makedirs('uploads')
+            if not os.path.exists('frames'): 
+                os.makedirs('frames')     
         with open(os.path.join("static/uploads", video_upload.name),"wb") as f:
-            f.write(video_upload.getbuffer())
-            video_file_path = "./static/uploads/"+str(video_upload.name)
-            st.write("saved uploaded file")
+         f.write(video_upload.getbuffer())
+         video_file_path = "./static/uploads/"+str(video_upload.name)
+         st.write("saved uploaded file")
         cap = cv2.VideoCapture(video_file_path)
         st.write('[RUNNING>>] Framing Video File....' + video_upload.name)
-        if not os.path.exists('data'):
-            os.makedirs('data')
         count = 0
         while(True):
-            ret, frame = cap.read()
-            if not ret: 
-                break
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-            name = 'static/frames/' + 'raw' + str(count) + '.jpg'
-            print('Framing Video ....' + name)
-            cv2.imwrite(name, frame)
-            count += 1
-    
+          ret, frame = cap.read()
+          if not ret: 
+            break
+          if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+          name = 'static/frames/' + (video_upload.name).split('.')[0] + str(count) + '.jpg'
+          cv2.imwrite(name, frame)
+          count += 1
+
     # detecting objects from frames
     def detect_object(self):
+        st.write('[RUNNING>>] Detection Process....')
         for item in self.get_frames():  
             original_image = load_img(item, target_size=(224, 224))
             image = img_to_array(original_image)
@@ -111,7 +115,7 @@ class ObjectDetection():
             y_pred = model.predict(image)
             label = decode_predictions(y_pred)
             self.objects.append(label[0][1][1])
-            # st.write(image)                                                                                                                                                                                                                                                                   
+        st.write('[STATUS>>] Finalizing Predictions ...')                                                                                                                                                                                                                                                                   
         with open('detected_objects.txt', 'w') as f:
             f.write(json.dumps(self.objects))
                 
@@ -126,6 +130,7 @@ class ObjectDetection():
     
     # function to search for detected objects
     def search_for(self, _object):
+        st.write('[RUNNING>>] Searching ...')
         with open('detected_objects.txt', 'r') as f:
             objects = list(json.loads(f.read()))
         results = []
@@ -133,8 +138,7 @@ class ObjectDetection():
             for i in range(len(objects)):
                 if _object.__eq__(objects[i]):
                     frame_path = self.get_frames()[i]
-                    frame_path = frame_path.split('\\')[1]
-                    results.append(frame_path)                
+                    results.append(frame_path) 
         else:
             return "There is no such file"
         return results
@@ -142,7 +146,6 @@ class ObjectDetection():
 # creating an instance of the Object Detection class
 detector=ObjectDetection()
 
-# front ent rendering using streamlit
 html_render_title = """
     <style="color:black;text-align:center;>KBS Assignment 2</style>
     """ 
@@ -162,30 +165,26 @@ st.title("KBS Assignment 2")
 st.markdown(html_temp, unsafe_allow_html = True)
 st.sidebar.markdown(html_side_temp, unsafe_allow_html = True)
 x = st.slider('Change Threshold value',min_value = 50,max_value = 255)
+videoLocation = st.file_uploader("Upload a Video:", type=["mp4", "mpeg", "avchd", "wmv", "mov", "avi", "flv", "webm"])
 
-videoLocation = st.file_uploader("Upload a Video:", type=["mp4"])
 btn = st.button("Detect and Predict")
 
 if btn:
     detector.to_frames(videoLocation)
     detector.detect_object()
     frames = detector.get_objects()
-    st.write('Frames for', videoLocation.name)
+    st.title('Frames for:', videoLocation.name)
     st.write(detector.get_objects())
-       
+    
 searchimage = st.text_input("Enter Object Name: ")
 searchbtn = st.button("Search Object")
-
 if searchbtn:
     searched = detector.search_for(searchimage)
-    searched_image = detector.search_for(searchimage)[0]
-    st.write('Objects of', searchimage, 'detected in', videoLocation.name)
-    st.write(searched)
-    st.write(searched_image, 'represents the', searchimage, 'objects detected in', videoLocation.name)
-    # original = Image.open(searched_image)
-    # st.image(original, use_column_width=True)
-    image_search = cv2.imread(searched[0])
-    st.image(image_search, caption=searched[0])
+    st.title("Search Results")
+    for img in searched:
+        with st.beta_container():
+            for col in st.beta_columns(1):
+                col.image(img, width=150, caption=searchimage, use_column_width=True) 
 
 
 
