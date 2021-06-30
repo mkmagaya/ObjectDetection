@@ -170,21 +170,30 @@ videoLocation = st.file_uploader("Upload a Video:", type=["mp4", "mpeg", "avchd"
 btn = st.button("Detect and Predict")
 
 if btn:
-    detector.to_frames(videoLocation)
-    detector.detect_object()
-    frames = detector.get_objects()
-    st.title('Frames for:', videoLocation.name)
-    st.write(detector.get_objects())
+    try:
+        detector.to_frames(videoLocation)
+        detector.detect_object()
+        frames = detector.get_objects()
+        st.title('Frames for the Video File', videoLocation.name)
+        st.write(detector.get_objects())
+    except:
+        st.write("Oops something went wrong")    
     
 searchimage = st.text_input("Enter Object Name: ")
 searchbtn = st.button("Search Object")
 if searchbtn:
     searched = detector.search_for(searchimage)
-    st.title("Search Results")
-    for img in searched:
-        with st.beta_container():
-            for col in st.beta_columns(1):
-                col.image(img, width=150, caption=searchimage, use_column_width=True) 
+    st.title("Search Results for objects in Video File ", detector.to_frames.__name__)
+    try:
+        for img in searched:
+            try:
+                with st.beta_container():
+                    for col in st.beta_columns(1):
+                        col.image(img, width=150, caption=searchimage, use_column_width=True)
+            except UnidentifiedImageError:
+                st.write('Image not Identified')
+    except:
+        st.write('The Object(s) doesn\'t Exist') 
 
 
 
