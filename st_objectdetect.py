@@ -61,7 +61,7 @@ model = VGG16(include_top=True, weights='imagenet', input_tensor=None, input_sha
 # # opt = Adam(lr=0.001)
 # model.compile(optimizer=opt, loss=keras.losses.categorical_crossentropy, metrics=['accuracy'])
 # opt =(learning_rate=0.1)
-opt = Adam(lr=0.001, decay=1e-6)
+opt = Adam(learning_rate=0.001, decay=1e-6)
 model.compile(loss='mse',optimizer=opt, metrics=['accuracy'])
 # model.compile(
 #     loss='sparse_categorical_crossentropy',
@@ -125,7 +125,7 @@ class ObjectDetection():
     
     # setting frames into an array to be searchable
     def get_frames(self):
-        FRAMES_ARR =  glob("static/frames/*.jpg")
+        FRAMES_ARR =  glob.glob("static/frames/*.jpg")
         return FRAMES_ARR
     
     # function to search for detected objects
